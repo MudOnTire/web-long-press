@@ -2,10 +2,10 @@
   "name": "web-long-press",
   "version": "1.0.0",
   "description": "Long press event handling for website usage",
-  "main": "index.js",
+  "main": "longpress.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npx babel src/index.js --out-file index.js"
+    "build": "npx babel --watch src/index.js --out-file longpress.js"
   },
   "repository": {
     "type": "git",

@@ -4,14 +4,27 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <style>
+      .long-press {
+        margin: 20px;
+      }
+    </style>
   </head>
-  <body>
-    <button class="long-press">Long Press Me</button>
+  <body class="long-press">
+    <div class="long-press">Long Press Me</div>
+    <button class="long-press">Long Press Me Too</button>
 
-    <script src="./index.js"></script>
+    <script src="./longpress.js"></script>
     <script>
       if (window.LongPress) {
-        var longPress = new LongPress({});
+        var longPress = new LongPress({
+          pressDelay: 1000,
+        });
+
+        const button = document.querySelector(".long-press");
+        document.addEventListener("longpress", (e) => {
+          console.log(e.target);
+        });
       }
     </script>
   </body>

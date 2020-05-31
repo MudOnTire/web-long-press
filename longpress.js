@@ -1,23 +1,5 @@
 "use strict";
 
-require("core-js/modules/es.symbol");
-
-require("core-js/modules/es.array.filter");
-
-require("core-js/modules/es.array.for-each");
-
-require("core-js/modules/es.object.get-own-property-descriptor");
-
-require("core-js/modules/es.object.get-own-property-descriptors");
-
-require("core-js/modules/es.object.keys");
-
-require("core-js/modules/es.regexp.exec");
-
-require("core-js/modules/es.string.match");
-
-require("core-js/modules/web.dom-collections.for-each");
-
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -33,30 +15,68 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     root.LongPress = factory();
   }
 })(typeof window !== "undefined" ? window : global, function () {
+  // default options
   var defaultOptions = {
     triggerClass: "long-press",
     pressDelay: 800
   };
+  var options;
+  var timer; // constructor
 
-  function LongPress(options) {
-    this.options = _objectSpread(_objectSpread({}, defaultOptions), {}, {
-      options: options
+  function LongPress(opts) {
+    options = _objectSpread(_objectSpread({}, defaultOptions), {}, {
+      opts: opts
     });
-    init(this.options);
+    init();
   }
+  /**
+   * initialize with options
+   * @param {Object} options
+   */
 
-  function init(options) {
+
+  function init() {
+    if (timer) clearTimeout(timer);
+
     if ("ontouchstart" in document.body) {
-      document.addEventListener("touchstart", handlePressStart);
+      document.addEventListener("touchstart", pressStart, {
+        once: true
+      });
+      document.addEventListener("touchend", init, {
+        once: true
+      });
     } else {
-      document.addEventListener("mousedown", handlePressStart);
+      document.addEventListener("mousedown", pressStart, {
+        once: true
+      });
+      document.addEventListener("mouseup", init, {
+        once: true
+      });
     }
   }
+  /**
+   * handle long-press start
+   * @param {Event} e
+   * @param {Object} options
+   */
 
-  function handlePressStart(e) {
-    console.dir(e.target);
 
-    if (e.target.className.match(/long-press/)) {}
+  function pressStart(e) {
+    if (e.target.className.split(" ").indexOf(options.triggerClass) < 0) return;
+    timer = setTimeout(function () {
+      handleLongPress(e.target);
+    }, options.pressDelay);
+  }
+  /**
+   *
+   * @param {HTMLElemnt} target
+   */
+
+
+  function handleLongPress(target) {
+    target.dispatchEvent(new Event("longpress", {
+      bubbles: true
+    }));
   }
 
   return LongPress;

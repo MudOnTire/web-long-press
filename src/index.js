@@ -7,28 +7,63 @@
     root.LongPress = factory();
   }
 })(typeof window !== "undefined" ? window : global, function () {
+  // default options
   const defaultOptions = {
     triggerClass: "long-press",
     pressDelay: 800,
   };
 
-  function LongPress(options) {
-    this.options = { ...defaultOptions, options };
-    init(this.options);
+  let options;
+  let timer;
+
+  // constructor
+  function LongPress(opts) {
+    options = { ...defaultOptions, opts };
+    init();
   }
 
-  function init(options) {
+  /**
+   * initialize with options
+   * @param {Object} options
+   */
+  function init() {
+    if (timer) clearTimeout(timer);
     if ("ontouchstart" in document.body) {
-      document.addEventListener("touchstart", handlePressStart);
+      document.addEventListener("touchstart", pressStart, {
+        once: true,
+      });
+      document.addEventListener("touchend", init, {
+        once: true,
+      });
     } else {
-      document.addEventListener("mousedown", handlePressStart);
+      document.addEventListener("mousedown", pressStart, {
+        once: true,
+      });
+      document.addEventListener("mouseup", init, {
+        once: true,
+      });
     }
   }
 
-  function handlePressStart(e) {
-    console.dir(e.target);
-    if (e.target.className.match(/long-press/)) {
-    }
+  /**
+   * handle long-press start
+   * @param {Event} e
+   * @param {Object} options
+   */
+  function pressStart(e) {
+    if (e.target.className.split(" ").indexOf(options.triggerClass) < 0) return;
+
+    timer = setTimeout(() => {
+      handleLongPress(e.target);
+    }, options.pressDelay);
+  }
+
+  /**
+   *
+   * @param {HTMLElemnt} target
+   */
+  function handleLongPress(target) {
+    target.dispatchEvent(new Event("longpress", { bubbles: true }));
   }
 
   return LongPress;
