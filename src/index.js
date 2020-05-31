@@ -18,7 +18,7 @@
 
   // constructor
   function LongPress(opts) {
-    options = { ...defaultOptions, opts };
+    options = { ...defaultOptions, ...opts };
     init();
   }
 

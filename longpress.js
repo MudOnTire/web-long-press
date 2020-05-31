@@ -24,9 +24,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   var timer; // constructor
 
   function LongPress(opts) {
-    options = _objectSpread(_objectSpread({}, defaultOptions), {}, {
-      opts: opts
-    });
+    options = _objectSpread(_objectSpread({}, defaultOptions), opts);
     init();
   }
   /**
