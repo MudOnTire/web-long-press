@@ -1,0 +1,26 @@
+{
+  "name": "web-long-press",
+  "version": "1.0.0",
+  "description": "Long press event handling for website usage",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx babel src/index.js --out-file index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MudOnTire/web-long-press.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MudOnTire/web-long-press/issues"
+  },
+  "homepage": "https://github.com/MudOnTire/web-long-press#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.10.1",
+    "@babel/core": "^7.10.2",
+    "@babel/preset-env": "^7.10.2",
+    "core-js": "3"
+  }
+}
