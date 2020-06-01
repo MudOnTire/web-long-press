@@ -18,64 +18,69 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   // default options
   var defaultOptions = {
     triggerClass: "long-press",
-    pressDelay: 800
-  };
-  var options;
-  var timer; // constructor
+    pressDelay: 800,
+    eventName: "longpress"
+  }; // constructor
 
   function LongPress(opts) {
-    options = _objectSpread(_objectSpread({}, defaultOptions), opts);
-    init();
+    this.options = _objectSpread(_objectSpread({}, defaultOptions), opts);
+    this.timer;
+    this.init();
   }
   /**
-   * initialize with options
-   * @param {Object} options
+   * initialize
    */
 
 
-  function init() {
+  LongPress.prototype.init = function () {
+    var that = this;
+    var timer = that.timer;
     if (timer) clearTimeout(timer);
 
     if ("ontouchstart" in document.body) {
-      document.addEventListener("touchstart", pressStart, {
-        once: true
+      document.addEventListener("touchstart", this.pressStart.bind(that), {
+        once: true,
+        passive: false
       });
-      document.addEventListener("touchend", init, {
+      document.addEventListener("touchend", this.init.bind(that), {
         once: true
       });
     } else {
-      document.addEventListener("mousedown", pressStart, {
+      document.addEventListener("mousedown", this.pressStart.bind(that), {
         once: true
       });
-      document.addEventListener("mouseup", init, {
+      document.addEventListener("mouseup", this.init.bind(that), {
         once: true
       });
     }
-  }
+  };
   /**
-   * handle long-press start
+   * handle press start
    * @param {Event} e
    * @param {Object} options
    */
 
 
-  function pressStart(e) {
+  LongPress.prototype.pressStart = function (e) {
+    var that = this;
+    var options = that.options;
+    e.preventDefault();
     if (e.target.className.split(" ").indexOf(options.triggerClass) < 0) return;
-    timer = setTimeout(function () {
-      handleLongPress(e.target);
+    that.timer = setTimeout(function () {
+      that.handleLongPress(e.target);
     }, options.pressDelay);
-  }
+  };
   /**
-   *
+   * trigger longpress event
    * @param {HTMLElemnt} target
    */
 
 
-  function handleLongPress(target) {
-    target.dispatchEvent(new Event("longpress", {
+  LongPress.prototype.handleLongPress = function (target) {
+    target.dispatchEvent(new Event(this.options.eventName, {
       bubbles: true
     }));
-  }
+  };
 
   return LongPress;
 });

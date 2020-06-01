@@ -1,31 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <style>
-      .long-press {
-        margin: 20px;
-      }
-    </style>
-  </head>
-  <body class="long-press">
-    <div class="long-press">Long Press Me</div>
-    <button class="long-press">Long Press Me Too</button>
 
-    <script src="./longpress.js"></script>
-    <script>
-      if (window.LongPress) {
-        var longPress = new LongPress({
-          pressDelay: 1000,
-        });
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <style>
+    button {
+      width: 200px;
+      height: 100px;
+      margin: 20px;
+      padding: 20px;
+      background: pink;
+    }
+  </style>
+</head>
 
-        const button = document.querySelector(".long-press");
-        document.addEventListener("longpress", (e) => {
-          console.log(e.target);
-        });
-      }
-    </script>
-  </body>
+<body>
+  <button class="longpress-500">LongPress for 500ms</button>
+  <button class="longpress-1000">LongPress for 1000ms</button>
+
+  <script src="./longpress.js"></script>
+  <script>
+    if (window.LongPress) {
+      new LongPress({
+        triggerClass:'longpress-500',
+        pressDelay: 500,
+        eventName: 'longpress500'
+      });
+
+      new LongPress({
+        triggerClass:'longpress-1000',
+        pressDelay: 1000,
+        eventName: 'longpress1000'
+      });
+
+      document.addEventListener("longpress500", (e) => {
+        console.log(`${e.target} has been long pressed for 500ms`);
+      });
+
+      document.addEventListener("longpress1000", (e) => {
+        console.log(`${e.target} has been long pressed for 1000ms`);
+      });
+
+      document.addEventListener("touchstart", (e) => {
+        console.log(`${e.target} has been touched`);
+      });
+    }
+  </script>
+</body>
+
 </html>
