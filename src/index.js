@@ -12,6 +12,7 @@
     triggerClass: "long-press",
     pressDelay: 800,
     eventName: "longpress",
+    bubbles: true,
   };
 
   // constructor
@@ -28,19 +29,21 @@
     const that = this;
     const { timer } = that;
     if (timer) clearTimeout(timer);
+    const pressStart = that.pressStart.bind(that);
+    const init = that.init.bind(that);
     if ("ontouchstart" in document.body) {
-      document.addEventListener("touchstart", this.pressStart.bind(that), {
+      document.addEventListener("touchstart", pressStart, {
         once: true,
         passive: false,
       });
-      document.addEventListener("touchend", this.init.bind(that), {
+      document.addEventListener("touchend", init, {
         once: true,
       });
     } else {
-      document.addEventListener("mousedown", this.pressStart.bind(that), {
+      document.addEventListener("mousedown", pressStart, {
         once: true,
       });
-      document.addEventListener("mouseup", this.init.bind(that), {
+      document.addEventListener("mouseup", init, {
         once: true,
       });
     }
@@ -55,8 +58,7 @@
     const that = this;
     const { options } = that;
     e.preventDefault();
-    if (e.target.className.split(" ").indexOf(options.triggerClass) < 0)
-      return;
+    if (e.target.className.split(" ").indexOf(options.triggerClass) < 0) return;
 
     that.timer = setTimeout(() => {
       that.handleLongPress(e.target);
@@ -68,7 +70,8 @@
    * @param {HTMLElemnt} target
    */
   LongPress.prototype.handleLongPress = function (target) {
-    target.dispatchEvent(new Event(this.options.eventName, { bubbles: true }));
+    const { eventName, bubbles } = this.options;
+    target.dispatchEvent(new Event(eventName, { bubbles }));
   };
 
   return LongPress;

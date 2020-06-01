@@ -17,34 +17,31 @@
 </head>
 
 <body>
-  <button class="longpress-500">LongPress for 500ms</button>
-  <button class="longpress-1000">LongPress for 1000ms</button>
+  <button class="longpress-500">LongPress for 0.5s</button>
+  <button class="longpress-1000">LongPress for 1s</button>
 
   <script src="./longpress.js"></script>
   <script>
     if (window.LongPress) {
       new LongPress({
-        triggerClass:'longpress-500',
+        triggerClass: 'longpress-500',
         pressDelay: 500,
-        eventName: 'longpress500'
+        eventName: 'longpress500',
+        bubbles: true
       });
 
       new LongPress({
-        triggerClass:'longpress-1000',
+        triggerClass: 'longpress-1000',
         pressDelay: 1000,
         eventName: 'longpress1000'
       });
 
       document.addEventListener("longpress500", (e) => {
-        console.log(`${e.target} has been long pressed for 500ms`);
+        console.log(e.target, 'has been long pressed for 0.5ms');
       });
 
       document.addEventListener("longpress1000", (e) => {
-        console.log(`${e.target} has been long pressed for 1000ms`);
-      });
-
-      document.addEventListener("touchstart", (e) => {
-        console.log(`${e.target} has been touched`);
+        console.log(e.target, 'has been long pressed for 1s');
       });
     }
   </script>

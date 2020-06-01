@@ -19,7 +19,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   var defaultOptions = {
     triggerClass: "long-press",
     pressDelay: 800,
-    eventName: "longpress"
+    eventName: "longpress",
+    bubbles: true
   }; // constructor
 
   function LongPress(opts) {
@@ -36,20 +37,22 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     var that = this;
     var timer = that.timer;
     if (timer) clearTimeout(timer);
+    var pressStart = that.pressStart.bind(that);
+    var init = that.init.bind(that);
 
     if ("ontouchstart" in document.body) {
-      document.addEventListener("touchstart", this.pressStart.bind(that), {
+      document.addEventListener("touchstart", pressStart, {
         once: true,
         passive: false
       });
-      document.addEventListener("touchend", this.init.bind(that), {
+      document.addEventListener("touchend", init, {
         once: true
       });
     } else {
-      document.addEventListener("mousedown", this.pressStart.bind(that), {
+      document.addEventListener("mousedown", pressStart, {
         once: true
       });
-      document.addEventListener("mouseup", this.init.bind(that), {
+      document.addEventListener("mouseup", init, {
         once: true
       });
     }
@@ -77,8 +80,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
   LongPress.prototype.handleLongPress = function (target) {
-    target.dispatchEvent(new Event(this.options.eventName, {
-      bubbles: true
+    var _this$options = this.options,
+        eventName = _this$options.eventName,
+        bubbles = _this$options.bubbles;
+    target.dispatchEvent(new Event(eventName, {
+      bubbles: bubbles
     }));
   };
 
